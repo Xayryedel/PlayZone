@@ -104,7 +104,7 @@
         .g2048-cell[data-val="1024"] { background: #edc53f; color: #f9f6f2; }
         .g2048-cell[data-val="2048"] { background: #edc22e; color: #f9f6f2; box-shadow: 0 0 20px rgba(237,194,46,0.8); }
 
-        .hangman-question { font-size: 18px; color: var(--muted); margin-bottom: 15px; text-align: center; max-width: 400px; }
+        .hangman-question { font-size: 18px; color: var(--text); margin-bottom: 20px; text-align: center; max-width: 400px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--stroke); }
         .hangman-word { font-size: 32px; letter-spacing: 10px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
         .hangman-letters { display: grid; grid-template-columns: repeat(7, 40px); gap: 10px; margin-top: 20px; }
         .hangman-btn { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--stroke); border-radius: 8px; color: var(--text); font-weight: 700; cursor: pointer; transition: 0.2s; }
@@ -113,6 +113,9 @@
         .hangman-btn.correct { background: var(--accent); color: #000; }
         .hangman-btn.wrong { background: #f87171; color: #000; }
         .hangman-svg { width: 150px; height: 150px; stroke: var(--text); stroke-width: 4; stroke-linecap: round; fill: none; margin-bottom: 20px; }
+        
+        .give-up-btn { margin-top: 20px; background: transparent; border: 1px solid #f87171; color: #f87171; padding: 8px 16px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-family: inherit; font-weight: 600; }
+        .give-up-btn:hover { background: rgba(248,113,113,0.1); }
 
         .stub { text-align: center; color: var(--muted); font-size: 18px; }
     </style>
@@ -535,36 +538,36 @@
 
         function initHangman() {
             const words = [
-                { q: 'Столица Франции?', a: 'ПАРИЖ' },
-                { q: 'Самая длинная река в мире?', a: 'АМАЗОНКА' },
-                { q: 'Какой газ мы вдыхаем для жизни?', a: 'КИСЛОРОД' },
-                { q: 'Планета, на которой мы живем?', a: 'ЗЕМЛЯ' },
-                { q: 'Самое высокое животное на планете?', a: 'ЖИРАФ' },
-                { q: 'Кто написал "Войну и мир"?', a: 'ТОЛСТОЙ' },
-                { q: 'Главный герой игры Mario?', a: 'МАРИО' },
-                { q: 'Сколько цветов в радуге?', a: 'СЕМЬ' },
-                { q: 'Как называется наша галактика?', a: 'МЛЕЧНЫЙ' },
-                { q: 'Самая большая планета Солнечной системы?', a: 'ЮПИТЕР' },
-                { q: 'Столица Японии?', a: 'ТОКИО' },
-                { q: 'Как называется устройство для печати документов?', a: 'ПРИНТЕР' },
-                { q: 'Кто написал музыку к балету "Лебединое озеро"?', a: 'ЧАЙКОВСКИЙ' },
-                { q: 'Самое быстрое наземное животное?', a: 'ГЕПАРД' },
-                { q: 'Какой язык программирования мы используем в этом проекте?', a: 'ДЖАВАСКРИПТ' },
-                { q: 'Столица Великобритании?', a: 'ЛОНДОН' },
-                { q: 'Как называется ледяная гора в океане?', a: 'АЙСБЕРГ' },
-                { q: 'Сколько сторон у квадрата?', a: 'ЧЕТЫРЕ' },
-                { q: 'Какой орган качает кровь в организме?', a: 'СЕРДЦЕ' },
-                { q: 'Как называется наука о небесных телах?', a: 'АСТРОНОМИЯ' },
-                { q: 'Самая маленькая птица в мире?', a: 'КОЛИБРИ' },
-                { q: 'Главный герой игры Zelda?', a: 'ЛИНК' },
-                { q: 'Как называется самая большая пустыня?', a: 'САХАРА' },
-                { q: 'Какой металл жидкий при комнатной температуре?', a: 'РТУТЬ' },
-                { q: 'Столица Италии?', a: 'РИМ' },
-                { q: 'Как называется дом для пчел?', a: 'УЛЕЙ' },
-                { q: 'Какая планета ближе всего к Солнцу?', a: 'МЕРКУРИЙ' },
-                { q: 'Сколько ног у паука?', a: 'ВОСЕМЬ' },
-                { q: 'Как называется самая высокая гора?', a: 'ЭВЕРЕСТ' },
-                { q: 'Какой праздник отмечают 31 декабря?', a: 'НОВЫЙГОД' }
+                { q: 'Какой химический элемент обозначается символом Au?', a: 'ЗОЛОТО' },
+                { q: 'В каком городе находится штаб-квартира ООН?', a: 'НЬЮЙОРК' },
+                { q: 'Как называется самая большая планета Солнечной системы?', a: 'ЮПИТЕР' },
+                { q: 'Кто написал роман «Мастер и Маргарита»?', a: 'БУЛГАКОВ' },
+                { q: 'Какой пролив разделяет Евразию и Северную Америку?', a: 'БЕРИНГОВ' },
+                { q: 'Какое животное является символом мудрости в древнегреческой мифологии?', a: 'СОВА' },
+                { q: 'В каком году человек впервые полетел в космос?', a: '1961' },
+                { q: 'Как называется наука, изучающая звезды и планеты?', a: 'АСТРОНОМИЯ' },
+                { q: 'Какой газ преобладает в атмосфере Земли?', a: 'АЗОТ' },
+                { q: 'Кто является автором картины «Мона Лиза»?', a: 'ЛЕОНАРДО' },
+                { q: 'Какая самая длинная кость в теле человека?', a: 'БЕДРЕННАЯ' },
+                { q: 'Как называется столица Австралии?', a: 'КАНБЕРРА' },
+                { q: 'Какое самое глубокое озеро в мире?', a: 'БАЙКАЛ' },
+                { q: 'В какой стране изобрели бумагу?', a: 'КИТАЙ' },
+                { q: 'Как называется самый твердый природный минерал?', a: 'АЛМАЗ' },
+                { q: 'Кто написал «Евгения Онегина»?', a: 'ПУШКИН' },
+                { q: 'Какой орган отвечает за фильтрацию крови в организме?', a: 'ПОЧКИ' },
+                { q: 'Как называется валюта Японии?', a: 'ИЕНА' },
+                { q: 'Сколько камер в сердце человека?', a: 'ЧЕТЫРЕ' },
+                { q: 'Какая страна является родиной Олимпийских игр?', a: 'ГРЕЦИЯ' },
+                { q: 'Как называется процесс превращения воды в пар?', a: 'ИСПАРЕНИЕ' },
+                { q: 'Кто изобрел лампочку накаливания?', a: 'ЭДИСОН' },
+                { q: 'Какой океан самый большой на планете?', a: 'ТИХИЙ' },
+                { q: 'В каком веке произошла Куликовская битва?', a: 'ЧЕТЫРНАДЦАТЫЙ' },
+                { q: 'Как называется самая маленькая страна в мире?', a: 'ВАТИКАН' },
+                { q: 'Из чего состоит молекула воды?', a: 'ВОДОРОД' },
+                { q: 'Кто написал симфонию «Лунная соната»?', a: 'БЕТХОВЕН' },
+                { q: 'Какое насекомое производит мед?', a: 'ПЧЕЛА' },
+                { q: 'Как называется главный город Древнего Египта?', a: 'МЕМФИС' },
+                { q: 'Сколько континентов на Земле?', a: 'ШЕСТЬ' }
             ];
 
             const current = words[Math.floor(Math.random() * words.length)];
@@ -573,6 +576,7 @@
             const maxMistakes = 6;
             let mistakes = 0;
             let guessed = [];
+            let gameOver = false;
             
             container.innerHTML = `
                 <div class="hangman-question"><strong>Вопрос:</strong> ${question}</div>
@@ -590,10 +594,12 @@
                 </svg>
                 <div class="hangman-word" id="hangmanWord"></div>
                 <div class="hangman-letters" id="hangmanLetters"></div>
+                <button class="give-up-btn" id="giveUpBtn">Сдаться и узнать ответ</button>
             `;
             
             const wordEl = document.getElementById('hangmanWord');
             const lettersEl = document.getElementById('hangmanLetters');
+            const giveUpBtn = document.getElementById('giveUpBtn');
 
             function renderWord() {
                 wordEl.textContent = word.split('').map(l => guessed.includes(l) ? l : '_').join(' ');
@@ -605,9 +611,11 @@
                     const btn = document.createElement('button');
                     btn.className = 'hangman-btn';
                     btn.textContent = letter;
-                    if (guessed.includes(letter)) {
+                    if (guessed.includes(letter) || gameOver) {
                         btn.disabled = true;
-                        btn.classList.add(word.includes(letter) ? 'correct' : 'wrong');
+                        if (guessed.includes(letter)) {
+                            btn.classList.add(word.includes(letter) ? 'correct' : 'wrong');
+                        }
                     }
                     btn.onclick = () => guess(letter);
                     lettersEl.appendChild(btn);
@@ -615,25 +623,30 @@
             }
 
             function guess(letter) {
+                if (gameOver) return;
                 guessed.push(letter);
                 if (!word.includes(letter)) {
                     mistakes++;
                     document.getElementById(['h-head','h-body','h-left-arm','h-right-arm','h-left-leg','h-right-leg'][mistakes-1]).style.display = 'block';
                 }
                 renderWord(); renderLetters();
-                checkGameOver();
+                checkGameOver(false);
             }
 
-            function checkGameOver() {
-                if (mistakes >= maxMistakes) {
+            function checkGameOver(isGiveUp) {
+                if (mistakes >= maxMistakes || isGiveUp) {
+                    gameOver = true;
+                    giveUpBtn.style.display = 'none';
                     container.innerHTML = `
                         <div class="stub">
-                            <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Вы проиграли!</h2>
+                            <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">${isGiveUp ? 'Вы сдались!' : 'Вы проиграли!'}</h2>
                             <p>Правильный ответ: <strong>${word}</strong></p>
                             <button class="auth-btn" style="margin-top:20px;" onclick="initHangman()">Играть снова</button>
                         </div>
                     `;
                 } else if (word.split('').every(l => guessed.includes(l))) {
+                    gameOver = true;
+                    giveUpBtn.style.display = 'none';
                     const best = localStorage.getItem('best_hangman') || 0;
                     const currentScore = maxMistakes - mistakes;
                     if (currentScore > parseInt(best)) localStorage.setItem('best_hangman', currentScore);
@@ -647,6 +660,10 @@
                     `;
                 }
             }
+
+            giveUpBtn.addEventListener('click', () => {
+                if (!gameOver) checkGameOver(true);
+            });
 
             renderWord(); renderLetters();
         }
