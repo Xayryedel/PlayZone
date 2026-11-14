@@ -33,14 +33,8 @@
             flex-direction: column;
         }
 
-        .bg-anim {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; overflow: hidden;
-        }
-        .bg-item {
-            position: absolute; top: -10%; font-size: 2rem; color: rgba(255,255,255,0.05);
-            animation: fall linear infinite;
-        }
+        .bg-anim { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+        .bg-item { position: absolute; top: -10%; font-size: 2rem; color: rgba(255,255,255,0.05); animation: fall linear infinite; }
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
@@ -48,25 +42,14 @@
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        header {
-            padding: 24px 18px; display: flex; justify-content: space-between; align-items: center;
-            max-width: 1100px; margin: 0 auto; width: 100%;
-        }
+        header { padding: 24px 18px; display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; width: 100%; }
         .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; }
         .logo .dot { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 20px rgba(110,231,183,0.7); }
         
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .auth-btn { 
-            display: flex; align-items: center; gap: 8px; background: #fff; color: #000; 
-            border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 600; 
-            border: none; cursor: pointer; transition: 0.2s; font-family: inherit;
-        }
+        .auth-btn { display: flex; align-items: center; gap: 8px; background: #fff; color: #000; border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; font-family: inherit; }
         .auth-btn:hover { background: #eee; box-shadow: 0 2px 10px rgba(255,255,255,0.2); }
-        .user-profile { 
-            display: flex; align-items: center; gap: 10px; background: var(--card); 
-            border: 1px solid var(--stroke); padding: 5px 10px 5px 5px; border-radius: 999px; 
-            display: none;
-        }
+        .user-profile { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--stroke); padding: 5px 10px 5px 5px; border-radius: 999px; display: none; }
         .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .user-profile span { font-size: 14px; font-weight: 600; }
         .logout-btn { background: transparent; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; margin-left: 5px; }
@@ -74,23 +57,14 @@
         main { max-width: 1100px; margin: 0 auto; padding: 20px 18px 60px; width: 100%; flex: 1; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
-        .game-card {
-            background: var(--card); border: 1px solid var(--stroke); border-radius: var(--radius);
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            cursor: pointer; transition: transform 0.2s, border-color 0.2s;
-            box-shadow: var(--shadow); position: relative; overflow: hidden;
-        }
+        .game-card { background: var(--card); border: 1px solid var(--stroke); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 15px; cursor: pointer; transition: transform 0.2s, border-color 0.2s; box-shadow: var(--shadow); position: relative; overflow: hidden; }
         .game-card:hover { transform: translateY(-5px); border-color: rgba(110,231,183,0.5); }
         .game-icon { font-size: 40px; margin-bottom: 10px; }
         .game-title { font-size: 18px; font-weight: 700; }
         .game-desc { font-size: 14px; color: var(--muted); flex: 1; }
         .game-best { font-size: 12px; font-weight: 700; color: var(--accent); background: rgba(110,231,183,0.1); padding: 4px 10px; border-radius: 10px; align-self: flex-start; }
 
-        .modal {
-            position: fixed; inset: 0; background: rgba(15, 18, 32, 0.95);
-            backdrop-filter: blur(10px); z-index: 1000;
-            display: none; flex-direction: column; padding: 20px;
-        }
+        .modal { position: fixed; inset: 0; background: rgba(15, 18, 32, 0.95); backdrop-filter: blur(10px); z-index: 1000; display: none; flex-direction: column; padding: 20px; }
         .modal.active { display: flex; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; max-width: 800px; margin: 0 auto 20px; width: 100%; }
         .modal-title { font-size: 24px; font-weight: 800; }
@@ -115,6 +89,29 @@
         .mem-card.matched { background: var(--accent); color: #000; border-color: var(--accent); cursor: default; }
         .mem-card span { transform: rotateY(180deg); display: none; }
         .mem-card.flipped span, .mem-card.matched span { display: block; }
+
+        .g2048-grid { display: grid; grid-template-columns: repeat(4, 80px); gap: 10px; background: var(--stroke); padding: 10px; border-radius: 12px; }
+        .g2048-cell { width: 80px; height: 80px; background: var(--card); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; transition: 0.15s; }
+        .g2048-cell[data-val="2"] { background: #eee4da; color: #776e65; }
+        .g2048-cell[data-val="4"] { background: #ede0c8; color: #776e65; }
+        .g2048-cell[data-val="8"] { background: #f2b179; color: #f9f6f2; }
+        .g2048-cell[data-val="16"] { background: #f59563; color: #f9f6f2; }
+        .g2048-cell[data-val="32"] { background: #f67c5f; color: #f9f6f2; }
+        .g2048-cell[data-val="64"] { background: #f65e3b; color: #f9f6f2; }
+        .g2048-cell[data-val="128"] { background: #edcf72; color: #f9f6f2; }
+        .g2048-cell[data-val="256"] { background: #edcc61; color: #f9f6f2; }
+        .g2048-cell[data-val="512"] { background: #edc850; color: #f9f6f2; }
+        .g2048-cell[data-val="1024"] { background: #edc53f; color: #f9f6f2; }
+        .g2048-cell[data-val="2048"] { background: #edc22e; color: #f9f6f2; box-shadow: 0 0 20px rgba(237,194,46,0.8); }
+
+        .hangman-word { font-size: 32px; letter-spacing: 10px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        .hangman-letters { display: grid; grid-template-columns: repeat(7, 40px); gap: 10px; margin-top: 20px; }
+        .hangman-btn { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--stroke); border-radius: 8px; color: var(--text); font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .hangman-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); }
+        .hangman-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .hangman-btn.correct { background: var(--accent); color: #000; }
+        .hangman-btn.wrong { background: #f87171; color: #000; }
+        .hangman-svg { width: 150px; height: 150px; stroke: var(--text); stroke-width: 4; stroke-linecap: round; fill: none; margin-bottom: 20px; }
 
         .stub { text-align: center; color: var(--muted); font-size: 18px; }
     </style>
@@ -231,9 +228,8 @@
             if (id === 'ttt') initTTT();
             else if (id === 'snake') initSnake();
             else if (id === 'memory') initMemory();
-            else if (id === '2048' || id === 'hangman') {
-                container.innerHTML = '<div class="stub">Эта игра скоро появится...</div>';
-            }
+            else if (id === '2048') init2048();
+            else if (id === 'hangman') initHangman();
         }
 
         function closeGame() {
@@ -297,30 +293,24 @@
             function drawWinLine(condition) {
                 const line = document.createElement('div');
                 line.className = 'win-line';
-                
                 const [start, , end] = condition;
                 const startCell = cells[start];
                 const endCell = cells[end];
-
                 const gridRect = grid.getBoundingClientRect();
                 const startRect = startCell.getBoundingClientRect();
                 const endRect = endCell.getBoundingClientRect();
-
                 const startX = startRect.left - gridRect.left + startRect.width / 2;
                 const startY = startRect.top - gridRect.top + startRect.height / 2;
                 const endX = endRect.left - gridRect.left + endRect.width / 2;
                 const endY = endRect.top - gridRect.top + endRect.height / 2;
-
                 const length = Math.hypot(endX - startX, endY - startY);
                 const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
-
                 line.style.width = '0px';
                 line.style.height = '6px';
                 line.style.left = startX + 'px';
                 line.style.top = startY + 'px';
                 line.style.transformOrigin = 'left center';
                 line.style.transform = `rotate(${angle}deg)`;
-                
                 grid.appendChild(line);
                 setTimeout(() => { line.style.width = length + 'px'; }, 50);
             }
@@ -335,14 +325,10 @@
             const canvas = document.getElementById('snakeCanvas');
             const ctx = canvas.getContext('2d');
             const scoreEl = document.getElementById('snakeScore');
-            
             const box = 20;
             let snake = [{x: 9 * box, y: 10 * box}];
             let direction = 'RIGHT';
-            let food = {
-                x: Math.floor(Math.random() * 19 + 1) * box,
-                y: Math.floor(Math.random() * 19 + 1) * box
-            };
+            let food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box };
             let score = 0;
 
             document.addEventListener('keydown', changeDirection);
@@ -364,28 +350,19 @@
                 if (snake[0].x === food.x && snake[0].y === food.y) {
                     score++;
                     scoreEl.textContent = score;
-                    food = {
-                        x: Math.floor(Math.random() * 19 + 1) * box,
-                        y: Math.floor(Math.random() * 19 + 1) * box
-                    };
-                } else {
-                    snake.pop();
-                }
+                    food = { x: Math.floor(Math.random() * 19 + 1) * box, y: Math.floor(Math.random() * 19 + 1) * box };
+                } else { snake.pop(); }
 
                 for (let i = 4; i < snake.length; i++) {
-                    if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
-                        gameOver(); return;
-                    }
+                    if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) { gameOver(); return; }
                 }
 
                 ctx.fillStyle = '#0f1220';
                 ctx.fillRect(0, 0, 400, 400);
-                
                 for (let i = 0; i < snake.length; i++) {
                     ctx.fillStyle = i === 0 ? '#60a5fa' : '#6ee7b7';
                     ctx.fillRect(snake[i].x, snake[i].y, box, box);
                 }
-
                 ctx.fillStyle = '#f472b6';
                 ctx.fillRect(food.x, food.y, box, box);
             }
@@ -393,12 +370,8 @@
             function gameOver() {
                 clearInterval(currentGameLoop);
                 document.removeEventListener('keydown', changeDirection);
-                
                 const best = localStorage.getItem('best_snake') || 0;
-                if (score > parseInt(best)) {
-                    localStorage.setItem('best_snake', score);
-                }
-                
+                if (score > parseInt(best)) localStorage.setItem('best_snake', score);
                 container.innerHTML = `
                     <div class="stub">
                         <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Игра окончена!</h2>
@@ -408,7 +381,6 @@
                     </div>
                 `;
             }
-
             currentGameLoop = setInterval(draw, 120);
         }
 
@@ -416,19 +388,12 @@
             const icons = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍑', '🥝', '🍍'];
             let cards = [...icons, ...icons];
             cards.sort(() => 0.5 - Math.random());
-
             container.innerHTML = `
                 <div class="memory-grid" id="memGrid"></div>
                 <button class="auth-btn" style="margin-top:20px;" onclick="initMemory()">Сбросить</button>
             `;
-            
             const grid = document.getElementById('memGrid');
-            let firstCard = null;
-            let secondCard = null;
-            let lockBoard = false;
-            let matchedPairs = 0;
-            let moves = 0;
-
+            let firstCard = null, secondCard = null, lockBoard = false, matchedPairs = 0, moves = 0;
             cards.forEach((icon) => {
                 const card = document.createElement('div');
                 card.className = 'mem-card';
@@ -437,45 +402,22 @@
                 card.addEventListener('click', () => flipCard(card));
                 grid.appendChild(card);
             });
-
             function flipCard(card) {
-                if (lockBoard) return;
-                if (card === firstCard) return;
-                if (card.classList.contains('matched')) return;
-
+                if (lockBoard || card === firstCard || card.classList.contains('matched')) return;
                 card.classList.add('flipped');
-
-                if (!firstCard) {
-                    firstCard = card;
-                    return;
-                }
-
-                secondCard = card;
-                moves++;
-                checkForMatch();
+                if (!firstCard) { firstCard = card; return; }
+                secondCard = card; moves++; checkForMatch();
             }
-
             function checkForMatch() {
                 const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
-                if (isMatch) {
-                    disableCards();
-                } else {
-                    unflipCards();
-                }
+                if (isMatch) disableCards(); else unflipCards();
             }
-
             function disableCards() {
-                firstCard.classList.add('matched');
-                secondCard.classList.add('matched');
-                matchedPairs++;
-                resetBoard();
-
+                firstCard.classList.add('matched'); secondCard.classList.add('matched');
+                matchedPairs++; resetBoard();
                 if (matchedPairs === icons.length) {
                     const best = localStorage.getItem('best_memory') || 999;
-                    if (moves < parseInt(best)) {
-                        localStorage.setItem('best_memory', moves);
-                    }
-                    
+                    if (moves < parseInt(best)) localStorage.setItem('best_memory', moves);
                     setTimeout(() => {
                         container.innerHTML = `
                             <div class="stub">
@@ -488,19 +430,193 @@
                     }, 500);
                 }
             }
-
             function unflipCards() {
                 lockBoard = true;
                 setTimeout(() => {
-                    firstCard.classList.remove('flipped');
-                    secondCard.classList.remove('flipped');
-                    resetBoard();
+                    firstCard.classList.remove('flipped'); secondCard.classList.remove('flipped'); resetBoard();
                 }, 800);
             }
+            function resetBoard() { [firstCard, secondCard, lockBoard] = [null, null, false]; }
+        }
 
-            function resetBoard() {
-                [firstCard, secondCard, lockBoard] = [null, null, false];
+        function init2048() {
+            container.innerHTML = `
+                <div class="score-display">Счёт: <span id="score2048">0</span></div>
+                <div class="g2048-grid" id="grid2048"></div>
+                <p style="color:var(--muted); margin-top:15px; font-size:14px;">Управление: стрелки на клавиатуре</p>
+            `;
+            const grid = document.getElementById('grid2048');
+            const scoreEl = document.getElementById('score2048');
+            let board = Array(16).fill(0);
+            let score = 0;
+            
+            function render() {
+                grid.innerHTML = '';
+                board.forEach(val => {
+                    const cell = document.createElement('div');
+                    cell.className = 'g2048-cell';
+                    if (val > 0) { cell.textContent = val; cell.dataset.val = val; }
+                    grid.appendChild(cell);
+                });
+                scoreEl.textContent = score;
             }
+
+            function addRandom() {
+                const empty = board.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+                if (empty.length === 0) return;
+                const idx = empty[Math.floor(Math.random() * empty.length)];
+                board[idx] = Math.random() < 0.9 ? 2 : 4;
+            }
+
+            function move(dir) {
+                let moved = false;
+                const getLine = (i) => {
+                    if (dir === 'left' || dir === 'right') return [i*4, i*4+1, i*4+2, i*4+3];
+                    else return [i, i+4, i+8, i+12];
+                };
+                for (let i = 0; i < 4; i++) {
+                    let line = getLine(i).map(idx => board[idx]).filter(v => v !== 0);
+                    if (dir === 'right' || dir === 'down') line.reverse();
+                    
+                    let newLine = [];
+                    for (let j = 0; j < line.length; j++) {
+                        if (line[j] === line[j+1]) { newLine.push(line[j] * 2); score += line[j] * 2; j++; }
+                        else { newLine.push(line[j]); }
+                    }
+                    while (newLine.length < 4) newLine.push(0);
+                    if (dir === 'right' || dir === 'down') newLine.reverse();
+                    
+                    getLine(i).forEach((idx, j) => {
+                        if (board[idx] !== newLine[j]) moved = true;
+                        board[idx] = newLine[j];
+                    });
+                }
+                if (moved) { addRandom(); render(); checkWin(); }
+            }
+
+            function checkWin() {
+                if (board.includes(2048)) {
+                    const best = localStorage.getItem('best_2048') || 0;
+                    if (score > parseInt(best)) localStorage.setItem('best_2048', score);
+                    alert("Победа! Вы собрали 2048!"); 
+                }
+                if (!board.includes(0)) {
+                    let canMove = false;
+                    for(let i=0; i<16; i++) {
+                        if(i%4 !== 3 && board[i] === board[i+1]) canMove = true;
+                        if(i < 12 && board[i] === board[i+4]) canMove = true;
+                    }
+                    if(!canMove) {
+                        const best = localStorage.getItem('best_2048') || 0;
+                        if (score > parseInt(best)) localStorage.setItem('best_2048', score);
+                        container.innerHTML = `
+                            <div class="stub">
+                                <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Игра окончена!</h2>
+                                <p>Ваш счёт: <strong>${score}</strong></p>
+                                <p style="margin-bottom:20px;">Рекорд: <strong>${Math.max(score, best)}</strong></p>
+                                <button class="auth-btn" onclick="init2048()">Играть снова</button>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            function handleKey(e) {
+                if (e.key === 'ArrowLeft') move('left');
+                if (e.key === 'ArrowRight') move('right');
+                if (e.key === 'ArrowUp') move('up');
+                if (e.key === 'ArrowDown') move('down');
+            }
+
+            document.addEventListener('keydown', handleKey);
+            const originalClose = window.closeGame;
+            window.closeGame = function() { document.removeEventListener('keydown', handleKey); originalClose(); };
+
+            addRandom(); addRandom(); render();
+        }
+
+        function initHangman() {
+            const words = ['ПРОГРАММИСТ', 'ИНТЕРНЕТ', 'КОМПЬЮТЕР', 'КЛАВИАТУРА', 'МОНИТОР', 'БРАУЗЕР', 'АЛГОРИТМ', 'ИНТЕРФЕЙС'];
+            const word = words[Math.floor(Math.random() * words.length)];
+            const maxMistakes = 6;
+            let mistakes = 0;
+            let guessed = [];
+            
+            container.innerHTML = `
+                <svg class="hangman-svg" viewBox="0 0 100 100">
+                    <line x1="10" y1="90" x2="90" y2="90" />
+                    <line x1="30" y1="90" x2="30" y2="10" />
+                    <line x1="30" y1="10" x2="70" y2="10" />
+                    <line x1="70" y1="10" x2="70" y2="20" />
+                    <circle id="h-head" cx="70" cy="30" r="10" style="display:none;" />
+                    <line id="h-body" x1="70" y1="40" x2="70" y2="60" style="display:none;" />
+                    <line id="h-left-arm" x1="70" y1="45" x2="55" y2="55" style="display:none;" />
+                    <line id="h-right-arm" x1="70" y1="45" x2="85" y2="55" style="display:none;" />
+                    <line id="h-left-leg" x1="70" y1="60" x2="55" y2="75" style="display:none;" />
+                    <line id="h-right-leg" x1="70" y1="60" x2="85" y2="75" style="display:none;" />
+                </svg>
+                <div class="hangman-word" id="hangmanWord"></div>
+                <div class="hangman-letters" id="hangmanLetters"></div>
+            `;
+            
+            const wordEl = document.getElementById('hangmanWord');
+            const lettersEl = document.getElementById('hangmanLetters');
+
+            function renderWord() {
+                wordEl.textContent = word.split('').map(l => guessed.includes(l) ? l : '_').join(' ');
+            }
+
+            function renderLetters() {
+                lettersEl.innerHTML = '';
+                'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('').forEach(letter => {
+                    const btn = document.createElement('button');
+                    btn.className = 'hangman-btn';
+                    btn.textContent = letter;
+                    if (guessed.includes(letter)) {
+                        btn.disabled = true;
+                        btn.classList.add(word.includes(letter) ? 'correct' : 'wrong');
+                    }
+                    btn.onclick = () => guess(letter);
+                    lettersEl.appendChild(btn);
+                });
+            }
+
+            function guess(letter) {
+                guessed.push(letter);
+                if (!word.includes(letter)) {
+                    mistakes++;
+                    document.getElementById(['h-head','h-body','h-left-arm','h-right-arm','h-left-leg','h-right-leg'][mistakes-1]).style.display = 'block';
+                }
+                renderWord(); renderLetters();
+                checkGameOver();
+            }
+
+            function checkGameOver() {
+                if (mistakes >= maxMistakes) {
+                    const best = localStorage.getItem('best_hangman') || 0;
+                    container.innerHTML = `
+                        <div class="stub">
+                            <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Вы проиграли!</h2>
+                            <p>Загаданное слово: <strong>${word}</strong></p>
+                            <button class="auth-btn" style="margin-top:20px;" onclick="initHangman()">Играть снова</button>
+                        </div>
+                    `;
+                } else if (word.split('').every(l => guessed.includes(l))) {
+                    const best = localStorage.getItem('best_hangman') || 999;
+                    const currentScore = maxMistakes - mistakes;
+                    if (currentScore > parseInt(best)) localStorage.setItem('best_hangman', currentScore);
+                    container.innerHTML = `
+                        <div class="stub">
+                            <h2 style="color:#6ee7b7; font-size:32px; margin-bottom:20px;">Победа!</h2>
+                            <p>Вы угадали слово: <strong>${word}</strong></p>
+                            <p style="margin-bottom:20px;">Осталось жизней: <strong>${maxMistakes - mistakes}</strong></p>
+                            <button class="auth-btn" onclick="initHangman()">Играть снова</button>
+                        </div>
+                    `;
+                }
+            }
+
+            renderWord(); renderLetters();
         }
     </script>
 </body>
