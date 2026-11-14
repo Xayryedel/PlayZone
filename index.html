@@ -104,6 +104,7 @@
         .g2048-cell[data-val="1024"] { background: #edc53f; color: #f9f6f2; }
         .g2048-cell[data-val="2048"] { background: #edc22e; color: #f9f6f2; box-shadow: 0 0 20px rgba(237,194,46,0.8); }
 
+        .hangman-question { font-size: 18px; color: var(--muted); margin-bottom: 15px; text-align: center; max-width: 400px; }
         .hangman-word { font-size: 32px; letter-spacing: 10px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
         .hangman-letters { display: grid; grid-template-columns: repeat(7, 40px); gap: 10px; margin-top: 20px; }
         .hangman-btn { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--stroke); border-radius: 8px; color: var(--text); font-weight: 700; cursor: pointer; transition: 0.2s; }
@@ -138,7 +139,6 @@
     <main>
         <h1 style="margin-bottom: 10px; font-size: 32px;">Мини-игры</h1>
         <p style="color: var(--muted); margin-bottom: 30px;">Выбирай игру и ставь рекорды. Работает без интернета.</p>
-
         <div class="grid" id="gameGrid"></div>
     </main>
 
@@ -477,7 +477,6 @@
                 for (let i = 0; i < 4; i++) {
                     let line = getLine(i).map(idx => board[idx]).filter(v => v !== 0);
                     if (dir === 'right' || dir === 'down') line.reverse();
-                    
                     let newLine = [];
                     for (let j = 0; j < line.length; j++) {
                         if (line[j] === line[j+1]) { newLine.push(line[j] * 2); score += line[j] * 2; j++; }
@@ -485,7 +484,6 @@
                     }
                     while (newLine.length < 4) newLine.push(0);
                     if (dir === 'right' || dir === 'down') newLine.reverse();
-                    
                     getLine(i).forEach((idx, j) => {
                         if (board[idx] !== newLine[j]) moved = true;
                         board[idx] = newLine[j];
@@ -536,13 +534,48 @@
         }
 
         function initHangman() {
-            const words = ['ПРОГРАММИСТ', 'ИНТЕРНЕТ', 'КОМПЬЮТЕР', 'КЛАВИАТУРА', 'МОНИТОР', 'БРАУЗЕР', 'АЛГОРИТМ', 'ИНТЕРФЕЙС'];
-            const word = words[Math.floor(Math.random() * words.length)];
+            const words = [
+                { q: 'Столица Франции?', a: 'ПАРИЖ' },
+                { q: 'Самая длинная река в мире?', a: 'АМАЗОНКА' },
+                { q: 'Какой газ мы вдыхаем для жизни?', a: 'КИСЛОРОД' },
+                { q: 'Планета, на которой мы живем?', a: 'ЗЕМЛЯ' },
+                { q: 'Самое высокое животное на планете?', a: 'ЖИРАФ' },
+                { q: 'Кто написал "Войну и мир"?', a: 'ТОЛСТОЙ' },
+                { q: 'Главный герой игры Mario?', a: 'МАРИО' },
+                { q: 'Сколько цветов в радуге?', a: 'СЕМЬ' },
+                { q: 'Как называется наша галактика?', a: 'МЛЕЧНЫЙ' },
+                { q: 'Самая большая планета Солнечной системы?', a: 'ЮПИТЕР' },
+                { q: 'Столица Японии?', a: 'ТОКИО' },
+                { q: 'Как называется устройство для печати документов?', a: 'ПРИНТЕР' },
+                { q: 'Кто написал музыку к балету "Лебединое озеро"?', a: 'ЧАЙКОВСКИЙ' },
+                { q: 'Самое быстрое наземное животное?', a: 'ГЕПАРД' },
+                { q: 'Какой язык программирования мы используем в этом проекте?', a: 'ДЖАВАСКРИПТ' },
+                { q: 'Столица Великобритании?', a: 'ЛОНДОН' },
+                { q: 'Как называется ледяная гора в океане?', a: 'АЙСБЕРГ' },
+                { q: 'Сколько сторон у квадрата?', a: 'ЧЕТЫРЕ' },
+                { q: 'Какой орган качает кровь в организме?', a: 'СЕРДЦЕ' },
+                { q: 'Как называется наука о небесных телах?', a: 'АСТРОНОМИЯ' },
+                { q: 'Самая маленькая птица в мире?', a: 'КОЛИБРИ' },
+                { q: 'Главный герой игры Zelda?', a: 'ЛИНК' },
+                { q: 'Как называется самая большая пустыня?', a: 'САХАРА' },
+                { q: 'Какой металл жидкий при комнатной температуре?', a: 'РТУТЬ' },
+                { q: 'Столица Италии?', a: 'РИМ' },
+                { q: 'Как называется дом для пчел?', a: 'УЛЕЙ' },
+                { q: 'Какая планета ближе всего к Солнцу?', a: 'МЕРКУРИЙ' },
+                { q: 'Сколько ног у паука?', a: 'ВОСЕМЬ' },
+                { q: 'Как называется самая высокая гора?', a: 'ЭВЕРЕСТ' },
+                { q: 'Какой праздник отмечают 31 декабря?', a: 'НОВЫЙГОД' }
+            ];
+
+            const current = words[Math.floor(Math.random() * words.length)];
+            const word = current.a;
+            const question = current.q;
             const maxMistakes = 6;
             let mistakes = 0;
             let guessed = [];
             
             container.innerHTML = `
+                <div class="hangman-question"><strong>Вопрос:</strong> ${question}</div>
                 <svg class="hangman-svg" viewBox="0 0 100 100">
                     <line x1="10" y1="90" x2="90" y2="90" />
                     <line x1="30" y1="90" x2="30" y2="10" />
@@ -593,23 +626,22 @@
 
             function checkGameOver() {
                 if (mistakes >= maxMistakes) {
-                    const best = localStorage.getItem('best_hangman') || 0;
                     container.innerHTML = `
                         <div class="stub">
                             <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Вы проиграли!</h2>
-                            <p>Загаданное слово: <strong>${word}</strong></p>
+                            <p>Правильный ответ: <strong>${word}</strong></p>
                             <button class="auth-btn" style="margin-top:20px;" onclick="initHangman()">Играть снова</button>
                         </div>
                     `;
                 } else if (word.split('').every(l => guessed.includes(l))) {
-                    const best = localStorage.getItem('best_hangman') || 999;
+                    const best = localStorage.getItem('best_hangman') || 0;
                     const currentScore = maxMistakes - mistakes;
                     if (currentScore > parseInt(best)) localStorage.setItem('best_hangman', currentScore);
                     container.innerHTML = `
                         <div class="stub">
                             <h2 style="color:#6ee7b7; font-size:32px; margin-bottom:20px;">Победа!</h2>
-                            <p>Вы угадали слово: <strong>${word}</strong></p>
-                            <p style="margin-bottom:20px;">Осталось жизней: <strong>${maxMistakes - mistakes}</strong></p>
+                            <p>Вы угадали: <strong>${word}</strong></p>
+                            <p style="margin-bottom:20px;">Осталось жизней: <strong>${currentScore}</strong></p>
                             <button class="auth-btn" onclick="initHangman()">Играть снова</button>
                         </div>
                     `;
