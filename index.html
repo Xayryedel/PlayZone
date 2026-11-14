@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayZone — Мини-игры онлайн</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #0f1220;
+            --card: rgba(255, 255, 255, .06);
+            --stroke: rgba(255, 255, 255, .12);
+            --text: #eef1f8;
+            --muted: #a7aec4;
+            --accent: #6ee7b7;
+            --accent-2: #60a5fa;
+            --radius: 20px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bg-anim {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+        }
+        .bg-item {
+            position: absolute; top: -10%; font-size: 2rem; color: rgba(255,255,255,0.05);
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        header {
+            padding: 24px 18px; display: flex; justify-content: space-between; align-items: center;
+            max-width: 1100px; margin: 0 auto; width: 100%;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; }
+        .logo .dot { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 20px rgba(110,231,183,0.7); }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .auth-btn { 
+            display: flex; align-items: center; gap: 8px; background: #fff; color: #000; 
+            border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 600; 
+            border: none; cursor: pointer; transition: 0.2s; font-family: inherit;
+        }
+        .auth-btn:hover { background: #eee; box-shadow: 0 2px 10px rgba(255,255,255,0.2); }
+        .user-profile { 
+            display: flex; align-items: center; gap: 10px; background: var(--card); 
+            border: 1px solid var(--stroke); padding: 5px 10px 5px 5px; border-radius: 999px; 
+            display: none;
+        }
+        .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .user-profile span { font-size: 14px; font-weight: 600; }
+        .logout-btn { background: transparent; border: none; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; margin-left: 5px; }
+
+        main { max-width: 1100px; margin: 0 auto; padding: 20px 18px 60px; width: 100%; flex: 1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        .game-card {
+            background: var(--card); border: 1px solid var(--stroke); border-radius: var(--radius);
+            padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+            box-shadow: var(--shadow); position: relative; overflow: hidden;
+        }
+        .game-card:hover { transform: translateY(-5px); border-color: rgba(110,231,183,0.5); }
+        .game-icon { font-size: 40px; margin-bottom: 10px; }
+        .game-title { font-size: 18px; font-weight: 700; }
+        .game-desc { font-size: 14px; color: var(--muted); flex: 1; }
+        .game-best { font-size: 12px; font-weight: 700; color: var(--accent); background: rgba(110,231,183,0.1); padding: 4px 10px; border-radius: 10px; align-self: flex-start; }
+
+        .modal {
+            position: fixed; inset: 0; background: rgba(15, 18, 32, 0.95);
+            backdrop-filter: blur(10px); z-index: 1000;
+            display: none; flex-direction: column; padding: 20px;
+        }
+        .modal.active { display: flex; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; max-width: 800px; margin: 0 auto 20px; width: 100%; }
+        .modal-title { font-size: 24px; font-weight: 800; }
+        .close-btn { background: var(--card); border: 1px solid var(--stroke); color: var(--text); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; font-family: inherit; transition: 0.2s; }
+        .close-btn:hover { background: rgba(255,100,100,0.2); border-color: #f87171; }
+        
+        .game-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
+
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 10px; position: relative; }
+        .ttt-cell { background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 800; cursor: pointer; transition: 0.2s; user-select: none; }
+        .ttt-cell:hover { background: rgba(255,255,255,0.1); }
+        .ttt-cell.x { color: var(--accent-2); }
+        .ttt-cell.o { color: var(--accent); }
+        .win-line { position: absolute; background: rgba(110,231,183,0.5); border-radius: 4px; transition: width 0.3s, height 0.3s; pointer-events: none; box-shadow: 0 0 15px var(--accent); }
+
+        canvas#snakeCanvas { background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .score-display { font-size: 24px; font-weight: 800; margin-bottom: 15px; color: var(--accent); }
+
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 80px); gap: 10px; }
+        .mem-card { width: 80px; height: 80px; background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: transform 0.3s, background 0.3s; transform-style: preserve-3d; }
+        .mem-card.flipped { background: var(--accent-2); color: #000; transform: rotateY(180deg); }
+        .mem-card.matched { background: var(--accent); color: #000; border-color: var(--accent); cursor: default; }
+        .mem-card span { transform: rotateY(180deg); display: none; }
+        .mem-card.flipped span, .mem-card.matched span { display: block; }
+
+        .stub { text-align: center; color: var(--muted); font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-anim" id="bgAnim"></div>
+
+    <header>
+        <div class="logo"><span class="dot"></span> PlayZone</div>
+        <div class="header-right">
+            <button id="loginBtn" class="auth-btn" onclick="loginStub()">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Войти
+            </button>
+            <div id="userProfile" class="user-profile">
+                <img id="userAvatar" src="https://via.placeholder.com/32" alt="Аватар">
+                <span id="userName">Игрок</span>
+                <button class="logout-btn" onclick="logoutStub()">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="margin-bottom: 10px; font-size: 32px;">Мини-игры</h1>
+        <p style="color: var(--muted); margin-bottom: 30px;">Выбирай игру и ставь рекорды. Работает без интернета.</p>
+
+        <div class="grid" id="gameGrid"></div>
+    </main>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle">Игра</div>
+            <button class="close-btn" onclick="closeGame()">Закрыть игру ✖</button>
+        </div>
+        <div class="game-container" id="gameContainer"></div>
+    </div>
+
+    <script>
+        const icons = ['🎮', '🕹️', '👾', '🎲', '🃏', '♟️', '🎯', '🧩'];
+        const bgAnim = document.getElementById('bgAnim');
+        for (let i = 0; i < 30; i++) {
+            const el = document.createElement('div');
+            el.className = 'bg-item';
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (1.5 + Math.random() * 2.5) + 'rem';
+            el.style.animationDuration = (10 + Math.random() * 20) + 's';
+            el.style.animationDelay = (Math.random() * 20) + 's';
+            bgAnim.appendChild(el);
+        }
+
+        function loginStub() {
+            const fakeName = "Игрок_" + Math.floor(Math.random() * 1000);
+            localStorage.setItem('gamehub_user', fakeName);
+            updateAuthUI();
+        }
+
+        function logoutStub() {
+            localStorage.removeItem('gamehub_user');
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const user = localStorage.getItem('gamehub_user');
+            const loginBtn = document.getElementById('loginBtn');
+            const profile = document.getElementById('userProfile');
+            const userName = document.getElementById('userName');
+
+            if (user) {
+                loginBtn.style.display = 'none';
+                profile.style.display = 'flex';
+                userName.textContent = user;
+            } else {
+                loginBtn.style.display = 'flex';
+                profile.style.display = 'none';
+            }
+        }
+        updateAuthUI();
+
+        const games = [
+            { id: 'ttt', title: 'Крестики-нолики', desc: 'Классика с анимацией выигрышной линии.', icon: '❌', bestKey: 'best_ttt' },
+            { id: 'snake', title: 'Змейка', desc: 'Собирай яблоки и не врезайся в стены.', icon: '🐍', bestKey: 'best_snake' },
+            { id: 'memory', title: 'Тест на память', desc: 'Найди все пары карточек.', icon: '🧠', bestKey: 'best_memory' },
+            { id: '2048', title: '2048', desc: 'Соединяй цифры и дойди до 2048.', icon: '🔢', bestKey: 'best_2048' },
+            { id: 'hangman', title: 'Виселица', desc: 'Угадай слово по буквам.', icon: '💀', bestKey: 'best_hangman' }
+        ];
+
+        const grid = document.getElementById('gameGrid');
+        games.forEach(g => {
+            const best = localStorage.getItem(g.bestKey);
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.onclick = () => openGame(g.id, g.title);
+            card.innerHTML = `
+                <div class="game-icon">${g.icon}</div>
+                <div class="game-title">${g.title}</div>
+                <div class="game-desc">${g.desc}</div>
+                ${best ? `<div class="game-best">Рекорд: ${best}</div>` : ''}
+            `;
+            grid.appendChild(card);
+        });
+
+        const modal = document.getElementById('gameModal');
+        const container = document.getElementById('gameContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        let currentGameLoop = null;
+
+        function openGame(id, title) {
+            modal.classList.add('active');
+            modalTitle.textContent = title;
+            container.innerHTML = '';
+            
+            if (id === 'ttt') initTTT();
+            else if (id === 'snake') initSnake();
+            else if (id === 'memory') initMemory();
+            else if (id === '2048' || id === 'hangman') {
+                container.innerHTML = '<div class="stub">Эта игра скоро появится...</div>';
+            }
+        }
+
+        function closeGame() {
+            modal.classList.remove('active');
+            if (currentGameLoop) clearInterval(currentGameLoop);
+            container.innerHTML = '';
+        }
+
+        function initTTT() {
+            container.innerHTML = `
+                <div class="ttt-grid" id="tttGrid">
+                    <div class="ttt-cell" data-index="0"></div><div class="ttt-cell" data-index="1"></div><div class="ttt-cell" data-index="2"></div>
+                    <div class="ttt-cell" data-index="3"></div><div class="ttt-cell" data-index="4"></div><div class="ttt-cell" data-index="5"></div>
+                    <div class="ttt-cell" data-index="6"></div><div class="ttt-cell" data-index="7"></div><div class="ttt-cell" data-index="8"></div>
+                </div>
+                <button class="auth-btn" style="margin-top:20px;" onclick="initTTT()">Сбросить</button>
+            `;
+            const grid = document.getElementById('tttGrid');
+            const cells = grid.querySelectorAll('.ttt-cell');
+            let board = ['', '', '', '', '', '', '', '', ''];
+            let currentPlayer = 'X';
+            let isGameActive = true;
+
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            cells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const index = parseInt(cell.dataset.index);
+                    if (board[index] !== '' || !isGameActive) return;
+
+                    board[index] = currentPlayer;
+                    cell.textContent = currentPlayer;
+                    cell.classList.add(currentPlayer.toLowerCase());
+
+                    if (checkWin()) return;
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                });
+            });
+
+            function checkWin() {
+                for (let condition of winConditions) {
+                    const [a, b, c] = condition;
+                    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                        isGameActive = false;
+                        drawWinLine(condition);
+                        return true;
+                    }
+                }
+                if (!board.includes('')) {
+                    isGameActive = false;
+                    alert("Ничья!");
+                    return true;
+                }
+                return false;
+            }
+
+            function drawWinLine(condition) {
+                const line = document.createElement('div');
+                line.className = 'win-line';
+                
+                const [start, , end] = condition;
+                const startCell = cells[start];
+                const endCell = cells[end];
+
+                const gridRect = grid.getBoundingClientRect();
+                const startRect = startCell.getBoundingClientRect();
+                const endRect = endCell.getBoundingClientRect();
+
+                const startX = startRect.left - gridRect.left + startRect.width / 2;
+                const startY = startRect.top - gridRect.top + startRect.height / 2;
+                const endX = endRect.left - gridRect.left + endRect.width / 2;
+                const endY = endRect.top - gridRect.top + endRect.height / 2;
+
+                const length = Math.hypot(endX - startX, endY - startY);
+                const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+
+                line.style.width = '0px';
+                line.style.height = '6px';
+                line.style.left = startX + 'px';
+                line.style.top = startY + 'px';
+                line.style.transformOrigin = 'left center';
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                grid.appendChild(line);
+                setTimeout(() => { line.style.width = length + 'px'; }, 50);
+            }
+        }
+
+        function initSnake() {
+            container.innerHTML = `
+                <div class="score-display">Счёт: <span id="snakeScore">0</span></div>
+                <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                <p style="color:var(--muted); margin-top:15px; font-size:14px;">Управление: стрелки на клавиатуре</p>
+            `;
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('snakeScore');
+            
+            const box = 20;
+            let snake = [{x: 9 * box, y: 10 * box}];
+            let direction = 'RIGHT';
+            let food = {
+                x: Math.floor(Math.random() * 19 + 1) * box,
+                y: Math.floor(Math.random() * 19 + 1) * box
+            };
+            let score = 0;
+
+            document.addEventListener('keydown', changeDirection);
+
+            function changeDirection(event) {
+                if(event.keyCode === 37 && direction !== 'RIGHT') direction = 'LEFT';
+                else if(event.keyCode === 38 && direction !== 'DOWN') direction = 'UP';
+                else if(event.keyCode === 39 && direction !== 'LEFT') direction = 'RIGHT';
+                else if(event.keyCode === 40 && direction !== 'UP') direction = 'DOWN';
+            }
+
+            function draw() {
+                if (direction === 'LEFT' && snake[0].x > 0) snake.unshift({x: snake[0].x - box, y: snake[0].y});
+                else if (direction === 'UP' && snake[0].y > 0) snake.unshift({x: snake[0].x, y: snake[0].y - box});
+                else if (direction === 'RIGHT' && snake[0].x < 380) snake.unshift({x: snake[0].x + box, y: snake[0].y});
+                else if (direction === 'DOWN' && snake[0].y < 380) snake.unshift({x: snake[0].x, y: snake[0].y + box});
+                else { gameOver(); return; }
+
+                if (snake[0].x === food.x && snake[0].y === food.y) {
+                    score++;
+                    scoreEl.textContent = score;
+                    food = {
+                        x: Math.floor(Math.random() * 19 + 1) * box,
+                        y: Math.floor(Math.random() * 19 + 1) * box
+                    };
+                } else {
+                    snake.pop();
+                }
+
+                for (let i = 4; i < snake.length; i++) {
+                    if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+                        gameOver(); return;
+                    }
+                }
+
+                ctx.fillStyle = '#0f1220';
+                ctx.fillRect(0, 0, 400, 400);
+                
+                for (let i = 0; i < snake.length; i++) {
+                    ctx.fillStyle = i === 0 ? '#60a5fa' : '#6ee7b7';
+                    ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                }
+
+                ctx.fillStyle = '#f472b6';
+                ctx.fillRect(food.x, food.y, box, box);
+            }
+
+            function gameOver() {
+                clearInterval(currentGameLoop);
+                document.removeEventListener('keydown', changeDirection);
+                
+                const best = localStorage.getItem('best_snake') || 0;
+                if (score > parseInt(best)) {
+                    localStorage.setItem('best_snake', score);
+                }
+                
+                container.innerHTML = `
+                    <div class="stub">
+                        <h2 style="color:#f87171; font-size:32px; margin-bottom:20px;">Игра окончена!</h2>
+                        <p>Твой счёт: <strong>${score}</strong></p>
+                        <p style="margin-bottom:20px;">Рекорд: <strong>${Math.max(score, best)}</strong></p>
+                        <button class="auth-btn" onclick="initSnake()">Играть снова</button>
+                    </div>
+                `;
+            }
+
+            currentGameLoop = setInterval(draw, 120);
+        }
+
+        function initMemory() {
+            const icons = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍑', '🥝', '🍍'];
+            let cards = [...icons, ...icons];
+            cards.sort(() => 0.5 - Math.random());
+
+            container.innerHTML = `
+                <div class="memory-grid" id="memGrid"></div>
+                <button class="auth-btn" style="margin-top:20px;" onclick="initMemory()">Сбросить</button>
+            `;
+            
+            const grid = document.getElementById('memGrid');
+            let firstCard = null;
+            let secondCard = null;
+            let lockBoard = false;
+            let matchedPairs = 0;
+            let moves = 0;
+
+            cards.forEach((icon) => {
+                const card = document.createElement('div');
+                card.className = 'mem-card';
+                card.dataset.icon = icon;
+                card.innerHTML = `<span>${icon}</span>`;
+                card.addEventListener('click', () => flipCard(card));
+                grid.appendChild(card);
+            });
+
+            function flipCard(card) {
+                if (lockBoard) return;
+                if (card === firstCard) return;
+                if (card.classList.contains('matched')) return;
+
+                card.classList.add('flipped');
+
+                if (!firstCard) {
+                    firstCard = card;
+                    return;
+                }
+
+                secondCard = card;
+                moves++;
+                checkForMatch();
+            }
+
+            function checkForMatch() {
+                const isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
+                if (isMatch) {
+                    disableCards();
+                } else {
+                    unflipCards();
+                }
+            }
+
+            function disableCards() {
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+                matchedPairs++;
+                resetBoard();
+
+                if (matchedPairs === icons.length) {
+                    const best = localStorage.getItem('best_memory') || 999;
+                    if (moves < parseInt(best)) {
+                        localStorage.setItem('best_memory', moves);
+                    }
+                    
+                    setTimeout(() => {
+                        container.innerHTML = `
+                            <div class="stub">
+                                <h2 style="color:#6ee7b7; font-size:32px; margin-bottom:20px;">Победа!</h2>
+                                <p>Ходов: <strong>${moves}</strong></p>
+                                <p style="margin-bottom:20px;">Лучший результат: <strong>${Math.min(moves, best)}</strong></p>
+                                <button class="auth-btn" onclick="initMemory()">Играть снова</button>
+                            </div>
+                        `;
+                    }, 500);
+                }
+            }
+
+            function unflipCards() {
+                lockBoard = true;
+                setTimeout(() => {
+                    firstCard.classList.remove('flipped');
+                    secondCard.classList.remove('flipped');
+                    resetBoard();
+                }, 800);
+            }
+
+            function resetBoard() {
+                [firstCard, secondCard, lockBoard] = [null, null, false];
+            }
+        }
+    </script>
+</body>
+</html>
